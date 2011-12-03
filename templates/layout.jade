@@ -1,3 +1,18 @@
-
-.main
-    p Hello
+!!! 5
+html(lang="en")
+    head
+        title Game of Life
+        link(rel="stylesheet", type="text/css", href="/theme.css")
+        
+        script(type="text/javascript", src="/libraries/underscore.js")
+        script(type="text/javascript", src="/libraries/jquery.js")
+        script(type="text/javascript", src="/libraries/jade.js")
+        script(type="text/javascript", src="/templates.js")
+        script(type="text/javascript", src="/start.js")
+        
+        :coffeescript
+            $ ->
+                console.log "start"
+    body
+        .main
+            p Hello

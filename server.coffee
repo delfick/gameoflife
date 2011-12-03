@@ -30,7 +30,7 @@ missing = (req, res) -> res.send "No such Asset as #{req.url}", 404
 app.get '*\.(js|css)', serveStatic, missing
 
 app.get '*', (req, res) ->
-    res.partial 'layout', {node:true}
+    res.partial 'layout'
 
 ########################
 ##   START
