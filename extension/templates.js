@@ -59,14 +59,20 @@ define(function() {
     __.buf.push(__.attrs({
       terse: true,
       'type': 'text/javascript',
-      'src': '/start.js'
+      'src': '/grid.js'
     }));
-    __.buf.push('></script><script type="text/javascript">\n\n  $(function() {\n    return console.log("start");\n  });\n</script></head><body><div');
+    __.buf.push('></script><script');
     __.buf.push(__.attrs({
       terse: true,
-      'class': 'main'
+      'type': 'text/javascript',
+      'src': '/start.js'
     }));
-    __.buf.push('><p>Hello</p></div></body></html>');
+    __.buf.push('></script></head><body><div');
+    __.buf.push(__.attrs({
+      terse: true,
+      'class': 'grid'
+    }));
+    __.buf.push('></div></body></html>');
     };
     return __.buf.join("");
   });
