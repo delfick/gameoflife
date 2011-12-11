@@ -25,7 +25,7 @@ app.configure 'production', ->
 app.get '/favicon.ico', (req, res) ->
     res.end()
 
-serveStatic = express.static "#{__dirname}/extension"
+serveStatic = express.static "#{__dirname}/compiled"
 missing = (req, res) -> res.send "No such Asset as #{req.url}", 404
 app.get '*\.(js|css)', serveStatic, missing
 

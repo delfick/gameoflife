@@ -1,2 +1,2 @@
 #!/bin/sh
-coffee -c -o extension -w src 
+coffee -c -o compiled -w src
