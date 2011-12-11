@@ -36,7 +36,18 @@ $ ->
     , 50
     
     $html.mousemove onMouseMove
-        
+    
+    # Initiate something to begin with
+    addCell [x+25, y+25] for [x, y] in [
+        [3, 2]
+        [2, 3]
+        [4, 3]
+        [2, 4]
+        [4, 4]
+        [3, 5]
+        [5, 5]
+    ]
+    
     # Update every 500 milliseconds
     every 500, ->
         g.update
