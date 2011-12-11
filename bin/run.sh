@@ -1,2 +1,2 @@
 #!/bin/sh
-node-dev server.coffee
+node_modules/node-dev/node-dev server.coffee

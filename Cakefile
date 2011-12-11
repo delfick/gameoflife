@@ -28,6 +28,7 @@ startWatching = ->
         monitor.on "changed", (f) ->
             runTests()
 
+task 'test', runTests
 task 'watch', startWatching
 task 'server', ->
     spawn './bin/run.sh', [], customFds:[0..2]

@@ -1,0 +1,26 @@
+{
+  "author": "Stephen Moore <stephen@delfick.com>",
+  "name": "gameoflife",
+  "description": "Gameoflife created in coffeescript with nodejs",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/delfick/gameoflife.git"
+  },
+  "scripts": {
+    "test": "./tests.coffee"
+  },
+  "engines": {
+    "node": "~0.6.1"
+  },
+  "dependencies": {
+    "watch" : "0.5.*",
+    "node-dev" : "*",
+    "underscore" : "*",
+    "stylus" : "*",
+    "coffee-script" : "*",
+    "express" : "*",
+    "jade" : "*"
+  },
+  "devDependencies": {}
+}

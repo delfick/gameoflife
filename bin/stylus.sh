@@ -1,2 +1,2 @@
 #!/bin/sh
-stylus -o compiled src
+node_modules/stylus/bin/stylus -o compiled src

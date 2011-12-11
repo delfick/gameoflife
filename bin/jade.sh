@@ -1,5 +1,5 @@
 #!/bin/sh
-coffeejade --amdout compiled/templates.js.1 templates
+node_modules/coffeejade/bin/coffeejade --amdout compiled/templates.js.1 templates
 echo "
 (function() {
 var exports;
