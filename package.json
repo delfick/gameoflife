@@ -14,7 +14,7 @@
     "node": "~0.6.1"
   },
   "dependencies": {
-    "watch" : "0.5.*",
+    "watch" : "0.5.x",
     "node-dev" : "*",
     "underscore" : "*",
     "stylus" : "*",
