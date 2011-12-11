@@ -20,7 +20,8 @@
     "stylus" : "*",
     "coffee-script" : "1.1.2",
     "express" : "*",
-    "jade" : "*"
+    "jade" : "*",
+    "jasmine-node" : "*"
   },
   "devDependencies": {}
 }
