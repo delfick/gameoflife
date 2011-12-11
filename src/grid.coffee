@@ -5,7 +5,7 @@ class Grid
     setLiveCell: (coord) ->
         [x, y] = coord
         created = false
-        if x > 0 and y > 0 and not @liveCells[coord]?
+        if x >= 0 and y >= 0 and not @liveCells[coord]?
             created = true
             @liveCells[coord] = true
         created
@@ -22,17 +22,22 @@ class Grid
             [x-1, y  ] # left
         ]
     
-    needChange: (coord, count) ->
-        return true
-        current = @liveCells[coord]
-        current != if not current and count is 3
+    needChange: (coord) ->
+        alive = @liveCells[coord]?
+        
+        # Determine count of alive neighbours        
+        func = (total, n) => total + if @liveCells[n] then 1 else 0
+        count = _.reduce @getSurrounding(coord), func, 0
+        
+        # Determine whether we need to change the status of this coordinate
+        alive != if not alive and count is 3
                 true
             else if count < 2
                 false
             else if count > 3
                 false
             else
-                true
+                alive
             
     toggle: (coord) ->
         current = @liveCells[coord]
@@ -40,41 +45,37 @@ class Grid
             delete @liveCells[coord]
         else
             @liveCells[coord] = true
-    
-    findChangesAround: (coord, checked, changed=[]) ->
-        # This function needs to be made not recursive
-        # Currently it just dies
-        unless checked[coord]?
-            checked[coord] = true
+
+    changeable: ->
+        wanted = for own coord of @liveCells
+            # Get two Numbers from the coord
+            [x, y] = coord.split(',')
+            xy = [x, y] = [Number(x), Number(y)]
             
-            count = 0
-            surrounding = @getSurrounding coord
-            for scoord in surrounding
-                if @liveCells[scoord] then count += 1
-           
-            if @needChange coord, count
-                changed.push coord
-                @liveCells[coord] = true
-            
-            if count > 0
-                for scoord in surrounding
-                    @findChangesAround scoord, checked, changed
-        changed
-    
-    update: ({context, perChange, noChanged}={}) ->
-        changed = []
-        checked = {}
+            # Get the list of both current cell and all surrounding cells
+            [xy].concat @getSurrounding xy
+        _.flatten wanted, 1
         
-        for own coord of @liveCells
-            for c in @findChangesAround coord.split(','), checked
-                changed.push c
+    update: ({context, perChange, noChanged}={}) ->
+        checked = {}
+        changed = for coord in @changeable()
+            [x, y] = coord
+            if checked[coord]? then continue
             
+            change = @needChange coord
+            checked[coord] = true
+            if not change then continue
+            
+            coord
+        
         if changed.length is 0
             noChanged?.call context
         else
             for coord in changed
                 @toggle coord
                 perChange?.call context, coord
+        
+        return
 
 ########################
 #   EXPORT

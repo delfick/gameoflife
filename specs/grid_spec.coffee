@@ -3,19 +3,6 @@
 describe "Grid", ->
     beforeEach ->
         @g = new Grid()
-        
-    describe "Setting live cells", ->
-        it "can be given a list of coordinates representing live cells", ->
-            @g.setLiveCells [5, 6]
-            expect(@g.liveCells).toEqual [[5, 6]]
-        
-        it "changes list of changed cells", ->
-            @g.changedCells = [[4, 4]]
-            @g.setLiveCells [5, 6], [7, 8]
-            expect(@g.liveCells).toEqual [[5, 6], [7, 8]]
-            expect(@g.changedCells).toEqual [[4, 4], [5, 6], [7, 8]]
-        
-        it "sets up hash of all cells", ->
     
     it "has a method to get nine coords from a single coord", ->
         coord = [4, 5]
@@ -32,18 +19,16 @@ describe "Grid", ->
         ]
         
     makeWorld = (grid) ->
-        liveCells = []
-        for cells, row in grid
-            for cell, col in cells
+        @g = new Grid()
+        for cells, col in grid
+            for cell, row in cells
                 if cell is 2 or cell is null then subject = [row, col]
-                if cell then liveCells.push [row, col]
+                if cell then @g.setLiveCell [row, col]
         
-        @g = new Grid row, col
-        @g.setLiveCells.apply @g, liveCells
         [subject, @g]
     
-    describe "Next state for a cell", ->
-        it "any live cell with 0 live neighbours dies", ->
+    describe "Determining changes", ->
+        it "changes any live cell with 0 live neighbours", ->
             [subject, grid] = makeWorld [
                 [0, 0, 0, 0]
                 [0, 0, 0, 0]
@@ -51,9 +36,9 @@ describe "Grid", ->
                 [0, 0, 0, 0]
             ]
             
-            expect(grid.nextState subject).toBe false
+            expect(grid.needChange subject).toBe true
         
-        it "any live cell with only 1 live neighbour dies", ->
+        it "changes any live cell with only 1 live neighbour", ->
             [subject, grid] = makeWorld [
                 [0, 0, 0, 0]
                 [0, 0, 0, 0]
@@ -61,9 +46,9 @@ describe "Grid", ->
                 [0, 0, 0, 0]
             ]
             
-            expect(grid.nextState subject).toBe false
+            expect(grid.needChange subject).toBe true
         
-        it "any live cell with two live neighbours lives", ->
+        it "doesn't change any live cell with two live neighbours", ->
             [subject, grid] = makeWorld [
                 [0, 0, 0, 0]
                 [0, 0, 0, 0]
@@ -71,9 +56,9 @@ describe "Grid", ->
                 [0, 1, 0, 0]
             ]
             
-            expect(grid.nextState subject).toBe true
+            expect(grid.needChange subject).toBe false
         
-        it "any live cell with three live neighbours lives", ->
+        it "doesn't change any live cell with three live neighbours", ->
             [subject, grid] = makeWorld [
                 [0, 0, 0, 0]
                 [0, 0, 1, 0]
@@ -81,9 +66,9 @@ describe "Grid", ->
                 [0, 1, 0, 0]
             ]
             
-            expect(grid.nextState subject).toBe true
+            expect(grid.needChange subject).toBe false
         
-        it "any live cell with more than three live neighbours dies", ->
+        it "changes any live cell with more than three live neighbours", ->
             [subject, grid] = makeWorld [
                 [0, 0, 0, 0]
                 [0, 1, 1, 0]
@@ -91,9 +76,9 @@ describe "Grid", ->
                 [0, 1, 0, 0]
             ]
             
-            expect(grid.nextState subject).toBe false
+            expect(grid.needChange subject).toBe true
         
-        it "any dead cell with exactly three live neighbours becomes alive", ->
+        it "changes any dead cell with exactly three live neighbours", ->
             [subject, grid] = makeWorld [
                 [0, 0,    0, 0]
                 [0, 0,    1, 0]
@@ -101,10 +86,44 @@ describe "Grid", ->
                 [0, 1,    0, 0]
             ]
             
-            expect(grid.nextState subject).toBe true
+            expect(grid.needChange subject).toBe true
         
     describe "Update", ->
-        it "creates a list of the changed cells", ->
+        it "updates correctly", ->
+            [subject, grid] = makeWorld [
+                [0, 0, 0, 0, 0, 0]
+                [0, 0, 1, 0, 0, 0]
+                [0, 1, 0, 1, 0, 0]
+                [0, 1, 0, 1, 0, 0]
+                [0, 0, 1, 0, 1, 0]
+                [0, 0, 0, 0, 0, 0]
+            ]
             
-        
-        it "changes the list of alive cells", ->
+            [subject, lookat] = makeWorld [
+                [0, 1, 1, 1, 0, 0]
+                [1, 1, 1, 1, 1, 0]
+                [1, 1, 1, 1, 1, 0]
+                [1, 1, 1, 1, 1, 1]
+                [1, 1, 1, 1, 1, 1]
+                [0, 1, 1, 1, 1, 1]
+            ]
+            
+            changeable = grid.changeable()
+            changeableAsDict = {}
+            for coord in changeable
+                changeableAsDict[coord] = true
+            
+            expect(changeableAsDict).toEqual lookat.liveCells
+            
+            [subject, grid2] = makeWorld [
+                [0, 0, 0, 0, 0, 0]
+                [0, 0, 1, 0, 0, 0]
+                [0, 1, 0, 1, 0, 0]
+                [0, 1, 0, 1, 1, 0]
+                [0, 0, 1, 1, 0, 0]
+                [0, 0, 0, 0, 0, 0]
+            ]
+            
+            grid.update()
+            expect(grid.liveCells).toEqual grid2.liveCells
+            
