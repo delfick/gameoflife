@@ -5,7 +5,7 @@ express = require 'express'
 ##   CONFIGURE APP
 ########################
 
-app = exports.app = express.createServer();
+app = exports.app = express()
 
 app.configure ->
     app.set 'views', "#{__dirname}/templates"
@@ -30,12 +30,11 @@ missing = (req, res) -> res.send "No such Asset as #{req.url}", 404
 app.get '*\.(js|css)', serveStatic, missing
 
 app.get '*', (req, res) ->
-    res.partial 'layout'
+    res.render 'layout'
 
 ########################
 ##   START
 ########################
 
 app.listen 3069
-address = app.address()
-console.log "Express server listening on http://#{address.address}:#{address.port}"
+console.log "Express server listening on http://localhost:3069"
