@@ -81,5 +81,6 @@ class Grid
 #   EXPORT
 ########################
 
-exports ?= window
+if not exports?
+  exports = window
 exports.Grid = Grid

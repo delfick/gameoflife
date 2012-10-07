@@ -36,6 +36,6 @@ app.get '*', (req, res) ->
 ##   START
 ########################
 
-app.listen 8000
+app.listen 3069
 address = app.address()
 console.log "Express server listening on http://#{address.address}:#{address.port}"
